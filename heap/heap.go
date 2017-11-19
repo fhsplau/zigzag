@@ -1,5 +1,9 @@
 package heap
 
+import (
+	"fmt"
+)
+
 // Type is
 type Type interface {
 	GetHeapifyCondition() func(int, int) bool
@@ -39,6 +43,25 @@ func NewHeap(size int, t Type) Heap {
 		store:     store,
 		doHeapify: t.GetHeapifyCondition(),
 	}
+}
+
+// Build builds heap from an given array
+func Build(arr []int, t Type) Heap {
+	heap := NewHeap(len(arr), t)
+	for _, el := range arr {
+		heap.Insert(el)
+	}
+	return heap
+}
+
+func (h Heap) String() string {
+	s := "["
+
+	for _, el := range h.store {
+		s += fmt.Sprintf("%d, ", el)
+	}
+
+	return s + "]"
 }
 
 // Insert inserts a new element on the heap.
