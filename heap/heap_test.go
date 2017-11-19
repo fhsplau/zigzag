@@ -3,8 +3,7 @@ package heap
 import "testing"
 
 func TestCanAddRootElement(t *testing.T) {
-	store := make([]int, 1)
-	heap := Heap{store: store}
+	heap := NewHeap(1, MinHeap{})
 
 	heap.Insert(1)
 
@@ -12,8 +11,7 @@ func TestCanAddRootElement(t *testing.T) {
 }
 
 func TestCanAddElementToNonEmptyHeap(t *testing.T) {
-	store := make([]int, 2)
-	heap := Heap{store: store}
+	heap := NewHeap(2, MinHeap{})
 	heap.Insert(1)
 	heap.Insert(2)
 
@@ -21,8 +19,7 @@ func TestCanAddElementToNonEmptyHeap(t *testing.T) {
 }
 
 func TestAddSmallerElement(t *testing.T) {
-	store := make([]int, 2)
-	heap := Heap{store: store}
+	heap := NewHeap(2, MinHeap{})
 	heap.Insert(2)
 	heap.Insert(1)
 
@@ -30,8 +27,7 @@ func TestAddSmallerElement(t *testing.T) {
 }
 
 func TestNewElementIsTheSmallest_Left(t *testing.T) {
-	store := make([]int, 4)
-	heap := Heap{store: store}
+	heap := NewHeap(4, MinHeap{})
 
 	heap.Insert(1)
 	heap.Insert(2)
@@ -45,8 +41,7 @@ func TestNewElementIsTheSmallest_Left(t *testing.T) {
 }
 
 func TestNewElementIsTheSmallest_Right(t *testing.T) {
-	store := make([]int, 10)
-	heap := Heap{store: store}
+	heap := NewHeap(10, MinHeap{})
 
 	heap.Insert(1)
 	heap.Insert(2)
