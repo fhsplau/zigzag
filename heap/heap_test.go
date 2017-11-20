@@ -86,7 +86,7 @@ func TestHeapSize_AfterInsert(t *testing.T) {
 	checkIfMatches(heap.Size(), 1, t)
 }
 
-func TestSortHeap_EmptyHeap(t *testing.T) {
+func TestHeapSort_EmptyHeap(t *testing.T) {
 	heap := NewHeap(10, MaxHeap{})
 	checkIfMatches(len(heap.Sort()), 0, t)
 }
