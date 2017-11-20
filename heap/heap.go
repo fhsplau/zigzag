@@ -33,6 +33,7 @@ func (mh MaxHeap) GetHeapifyCondition() func(int, int) bool {
 type Heap struct {
 	next      int
 	store     []int
+	size      int
 	doHeapify func(int, int) bool
 }
 
@@ -71,17 +72,80 @@ func (h *Heap) Insert(el int) {
 	p := h.GetParent(i)
 
 	for h.doHeapify(h.store[p], h.store[i]) {
-		tmp := h.store[p]
-		h.store[p] = h.store[i]
-		h.store[i] = tmp
+		swap(&(h.store), p, i)
 		i = p
 		p = h.GetParent(i)
 	}
 
 	h.next++
+	h.size++
 }
 
 // GetParent gets parent of the i-th element
 func (h *Heap) GetParent(i int) int {
 	return (i - 1) / 2
+}
+
+// Size returns heap size
+func (h *Heap) Size() int {
+	return h.size
+}
+
+// Sort sorts the heap
+func (h *Heap) Sort() []int {
+	var sorted []int
+	if h.Size() == 0 {
+		return []int{}
+	}
+
+	sorted = append(sorted, h.store[0:h.next]...)
+	swap := swapper(&sorted)
+	nextCh := getNextChild(&sorted, h.doHeapify)
+	pivot := len(sorted) - 1
+
+	for pivot != 0 {
+		swap(pivot, 0)
+		parent := 0
+		ch := nextCh(parent, pivot)
+
+		for ch < pivot && h.doHeapify(sorted[parent], sorted[ch]) {
+			swap(parent, ch)
+			parent = ch
+			ch = nextCh(parent, pivot)
+		}
+
+		pivot--
+	}
+
+	return sorted
+}
+
+func getNextChild(arr *[]int, f func(int, int) bool) func(int, int) int {
+	return func(parent, pivot int) int {
+		var ch int
+		ch1 := 2*parent + 1
+		ch2 := 2*parent + 2
+
+		if ch2 >= pivot || f((*arr)[ch2], (*arr)[ch1]) {
+			ch = ch1
+		} else {
+			ch = ch2
+		}
+
+		return ch
+	}
+}
+
+func swapper(arr *[]int) func(int, int) {
+	return func(first, second int) {
+		tmp := (*arr)[first]
+		(*arr)[first] = (*arr)[second]
+		(*arr)[second] = tmp
+	}
+}
+
+func swap(arr *[]int, first int, second int) {
+	tmp := (*arr)[first]
+	(*arr)[first] = (*arr)[second]
+	(*arr)[second] = tmp
 }

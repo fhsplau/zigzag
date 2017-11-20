@@ -1,6 +1,9 @@
 package heap
 
-import "testing"
+import (
+	"reflect"
+	"testing"
+)
 
 func TestCanAddRootElement(t *testing.T) {
 	heap := NewHeap(1, MinHeap{})
@@ -70,6 +73,47 @@ func TestGetParent_Right(t *testing.T) {
 	heap := Heap{store: store}
 
 	checkIfMatches(heap.GetParent(4), 1, t)
+}
+
+func TestHeapSize_EmptyHeap(t *testing.T) {
+	heap := NewHeap(10, MaxHeap{})
+	checkIfMatches(heap.Size(), 0, t)
+}
+
+func TestHeapSize_AfterInsert(t *testing.T) {
+	heap := NewHeap(10, MaxHeap{})
+	heap.Insert(1)
+	checkIfMatches(heap.Size(), 1, t)
+}
+
+func TestSortHeap_EmptyHeap(t *testing.T) {
+	heap := NewHeap(10, MaxHeap{})
+	checkIfMatches(len(heap.Sort()), 0, t)
+}
+
+func TestHeapSort_HeapSizeSmallerThanCap(t *testing.T) {
+	heap := NewHeap(10, MaxHeap{})
+	heap.Insert(1)
+	heap.Insert(2)
+	checkIfMatches(len(heap.Sort()), 2, t)
+}
+
+func TestHeapSort(t *testing.T) {
+	heap := NewHeap(10, MaxHeap{})
+	heap.Insert(10)
+	heap.Insert(-2)
+	heap.Insert(5)
+	heap.Insert(18)
+	heap.Insert(-5)
+
+	expected := []int{-5, -2, 5, 10, 18}
+	sorted := heap.Sort()
+
+	if !reflect.DeepEqual(sorted, expected) {
+		t.Log(sorted)
+		t.Log(expected)
+		t.Fail()
+	}
 }
 
 func checkIfMatches(is int, shouldBe int, t *testing.T) {
