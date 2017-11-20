@@ -4,51 +4,47 @@ import (
 	"fmt"
 )
 
-// Type is
-type Type interface {
-	GetHeapifyCondition() func(int, int) bool
+// Comparator is
+type Comparator interface {
+	Compare(int, int) bool
 }
 
 // MinHeap is
 type MinHeap struct{}
 
-// GetHeapifyCondition gets
-func (mh MinHeap) GetHeapifyCondition() func(int, int) bool {
-	return func(p int, i int) bool {
-		return p > i
-	}
+// Compare gets
+func (mh MinHeap) Compare(parent, child int) bool {
+	return parent > child
 }
 
 // MaxHeap is
 type MaxHeap struct{}
 
-// GetHeapifyCondition gets
-func (mh MaxHeap) GetHeapifyCondition() func(int, int) bool {
-	return func(p int, i int) bool {
-		return i > p
-	}
+// Compare gets
+func (mh MaxHeap) Compare(parent, child int) bool {
+	return child > parent
 }
 
 // Heap is heap
 type Heap struct {
-	next      int
-	store     []int
-	size      int
-	doHeapify func(int, int) bool
+	next       int
+	store      []int
+	size       int
+	comparator Comparator
 }
 
 // NewHeap creates a new heap
-func NewHeap(size int, t Type) Heap {
+func NewHeap(size int, t Comparator) Heap {
 	store := make([]int, size)
 	return Heap{
-		store:     store,
-		doHeapify: t.GetHeapifyCondition(),
+		store:      store,
+		comparator: t,
 	}
 }
 
 // Build builds heap from an given array
-func Build(arr []int, t Type) Heap {
-	heap := NewHeap(len(arr), t)
+func Build(arr []int, c Comparator) Heap {
+	heap := NewHeap(len(arr), c)
 	for _, el := range arr {
 		heap.Insert(el)
 	}
@@ -71,7 +67,7 @@ func (h *Heap) Insert(el int) {
 	i := h.next
 	p := h.GetParent(i)
 
-	for h.doHeapify(h.store[p], h.store[i]) {
+	for h.comparator.Compare(h.store[p], h.store[i]) {
 		swap(&(h.store), p, i)
 		i = p
 		p = h.GetParent(i)
@@ -100,7 +96,7 @@ func (h *Heap) Sort() []int {
 
 	sorted = append(sorted, h.store[0:h.next]...)
 	swap := swapper(&sorted)
-	nextCh := getNextChild(&sorted, h.doHeapify)
+	nextCh := getNextChild(&sorted, h.comparator)
 	pivot := len(sorted) - 1
 
 	for pivot != 0 {
@@ -108,7 +104,7 @@ func (h *Heap) Sort() []int {
 		parent := 0
 		ch := nextCh(parent, pivot)
 
-		for ch < pivot && h.doHeapify(sorted[parent], sorted[ch]) {
+		for ch < pivot && h.comparator.Compare(sorted[parent], sorted[ch]) {
 			swap(parent, ch)
 			parent = ch
 			ch = nextCh(parent, pivot)
@@ -120,13 +116,13 @@ func (h *Heap) Sort() []int {
 	return sorted
 }
 
-func getNextChild(arr *[]int, f func(int, int) bool) func(int, int) int {
+func getNextChild(arr *[]int, c Comparator) func(int, int) int {
 	return func(parent, pivot int) int {
 		var ch int
 		ch1 := 2*parent + 1
 		ch2 := 2*parent + 2
 
-		if ch2 >= pivot || f((*arr)[ch2], (*arr)[ch1]) {
+		if ch2 >= pivot || c.Compare((*arr)[ch2], (*arr)[ch1]) {
 			ch = ch1
 		} else {
 			ch = ch2
