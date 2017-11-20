@@ -34,11 +34,11 @@ type Heap struct {
 }
 
 // NewHeap creates a new heap
-func NewHeap(size int, t Comparator) Heap {
+func NewHeap(size int, c Comparator) Heap {
 	store := make([]int, size)
 	return Heap{
 		store:      store,
-		comparator: t,
+		comparator: c,
 	}
 }
 
