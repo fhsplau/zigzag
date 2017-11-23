@@ -66,9 +66,10 @@ func (h *Heap) Insert(el int) {
 	h.store[h.next] = el
 	i := h.next
 	p := h.GetParent(i)
+	swap := swapper(&(h.store))
 
 	for h.comparator.Compare(h.store[p], h.store[i]) {
-		swap(&(h.store), p, i)
+		swap(p, i)
 		i = p
 		p = h.GetParent(i)
 	}
@@ -138,10 +139,4 @@ func swapper(arr *[]int) func(int, int) {
 		(*arr)[first] = (*arr)[second]
 		(*arr)[second] = tmp
 	}
-}
-
-func swap(arr *[]int, first int, second int) {
-	tmp := (*arr)[first]
-	(*arr)[first] = (*arr)[second]
-	(*arr)[second] = tmp
 }
