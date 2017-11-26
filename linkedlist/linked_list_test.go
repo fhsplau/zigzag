@@ -91,6 +91,69 @@ func TestLinkedListContainsElement(t *testing.T) {
 	}
 }
 
+func TestGetReturnsErrorIfListIsEmpty(t *testing.T) {
+	l := LinkedList{}
+	_, err := l.Get(0)
+
+	if err == nil {
+		t.Log("No error about empty list")
+		t.Fail()
+	}
+}
+
+func TestGetReturnsErrorIfIndexIsEqualToSize(t *testing.T) {
+	l := LinkedList{size: 10}
+	_, err := l.Get(10)
+
+	if err == nil {
+		t.Log("No error about index out of bounds")
+		t.Fail()
+	}
+}
+
+func TestGetReturnsErrorIfIndexIsGreaterThanSize(t *testing.T) {
+	l := LinkedList{size: 10}
+	_, err := l.Get(11)
+
+	if err == nil {
+		t.Log("No error about index out of bounds")
+		t.Fail()
+	}
+}
+
+func TestGetReturnsErrorIfIndexIsNegative(t *testing.T) {
+	l := LinkedList{size: 10}
+	_, err := l.Get(-1)
+
+	if err == nil {
+		t.Log("No error about negative index")
+		t.Fail()
+	}
+
+}
+
+func TestGetRootElement(t *testing.T) {
+	l := LinkedList{}
+
+	l.Add(10)
+
+	el, _ := l.Get(0)
+	areEqual(el, 10, t)
+}
+
+func TestGetOneOfTheNextElements(t *testing.T) {
+	l := LinkedList{}
+	l.Add(10)
+	l.Add(20)
+	l.Add(30)
+
+	el, _ := l.Get(1)
+	areEqual(el, 20, t)
+
+	el, _ = l.Get(2)
+	areEqual(el, 30, t)
+}
+
 func BenchmarkAddToList(t *testing.B) {
 	l := LinkedList{}
 
@@ -114,7 +177,7 @@ func BenchmarkContainElement(b *testing.B) {
 
 func areEqual(is, expected int, t *testing.T) {
 	if is != expected {
-		t.Logf("Should be %d, is %d", is, expected)
+		t.Logf("Should be %d, is %d", expected, is)
 		t.Fail()
 	}
 }

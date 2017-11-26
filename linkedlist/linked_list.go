@@ -1,5 +1,9 @@
 package linkedlist
 
+import (
+	"fmt"
+)
+
 // LinkedList struct represents linked list
 type LinkedList struct {
 	next *LinkedList
@@ -26,6 +30,32 @@ func (l *LinkedList) Add(el int) {
 		}
 		current.size++
 		current = current.next
+	}
+}
+
+// Get gets
+func (l *LinkedList) Get(index int) (int, error) {
+	if index < 0 {
+		return 0, fmt.Errorf("Index can't be negative")
+	}
+
+	if l.Size() == 0 {
+		return 0, fmt.Errorf("Empty list")
+	}
+
+	if index >= l.Size() {
+		return 0, fmt.Errorf("Index out of bounds")
+	}
+
+	current := l
+	var count int
+
+	for {
+		if count == index {
+			return current.root, nil
+		}
+		current = current.next
+		count++
 	}
 }
 
