@@ -18,6 +18,15 @@ func TestAfterAddingOneElementSizeIsOne(t *testing.T) {
 	areEqual(l.Size(), 1, t)
 }
 
+func TestAfterAddingTwoElementsSizeIsTwo(t *testing.T) {
+	l := LinkedList{}
+
+	l.Add(10)
+	l.Add(11)
+
+	areEqual(l.Size(), 2, t)
+}
+
 func TestEmptyLinkedListDoesNotContainAnElement(t *testing.T) {
 	l := LinkedList{}
 
@@ -79,6 +88,27 @@ func TestLinkedListContainsElement(t *testing.T) {
 	if !l.Contain(100) {
 		t.Log("List should contain 100")
 		t.Fail()
+	}
+}
+
+func BenchmarkAddToList(t *testing.B) {
+	l := LinkedList{}
+
+	for i := 0; i < t.N; i++ {
+		l.Add(10)
+	}
+}
+
+func BenchmarkContainElement(b *testing.B) {
+	c := 1000
+	l := LinkedList{}
+
+	for i := 0; i < c; i++ {
+		l.Add(i)
+	}
+
+	for n := 0; n < b.N; n++ {
+		l.Contain(c + 1)
 	}
 }
 

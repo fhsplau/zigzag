@@ -14,24 +14,32 @@ func (l *LinkedList) Size() int {
 
 // Add adds a new element to the linked list
 func (l *LinkedList) Add(el int) {
-	if l.size == 0 {
-		l.root = el
-	} else {
-		if l.next == nil {
-			l.next = &LinkedList{}
+	current := l
+	for {
+		if current.Size() == 0 {
+			current.root = el
+			current.size++
+			return
 		}
-		l.next.Add(el)
+		if current.next == nil {
+			current.next = &LinkedList{}
+		}
+		current.size++
+		current = current.next
 	}
-	l.size++
 }
 
 // Contain checks if a linked list contains given element.
 func (l *LinkedList) Contain(el int) bool {
-	if l.root == el {
-		return true
+	current := l
+	for {
+		if current == nil {
+			return false
+		}
+
+		if current.root == el {
+			return true
+		}
+		current = current.next
 	}
-	if l.next != nil {
-		return l.next.Contain(el)
-	}
-	return false
 }
