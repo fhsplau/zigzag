@@ -154,6 +154,46 @@ func TestGetOneOfTheNextElements(t *testing.T) {
 	areEqual(el, 30, t)
 }
 
+func TestRemoveFromEmptyList(t *testing.T) {
+	l := LinkedList{}
+	err := l.Remove(0)
+
+	if err == nil {
+		t.Log("No error about empty list")
+		t.Fail()
+	}
+}
+
+func TestRemoveNegativeIndex(t *testing.T) {
+	l := LinkedList{size: 10}
+	err := l.Remove(-1)
+
+	if err == nil {
+		t.Log("No error about negative index")
+		t.Fail()
+	}
+}
+
+func TestRemoveIndexEqualToSize(t *testing.T) {
+	l := LinkedList{size: 10}
+	err := l.Remove(10)
+
+	if err == nil {
+		t.Log("No error about index out of bounds")
+		t.Fail()
+	}
+}
+
+func TestRemoveIndexGreaterThanSize(t *testing.T) {
+	l := LinkedList{size: 10}
+	err := l.Remove(11)
+
+	if err == nil {
+		t.Log("No error about index out of bounds")
+		t.Fail()
+	}
+}
+
 func BenchmarkAddToList(t *testing.B) {
 	l := LinkedList{}
 

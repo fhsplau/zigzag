@@ -59,6 +59,22 @@ func (l *LinkedList) Get(index int) (int, error) {
 	}
 }
 
+// Remove removes
+func (l *LinkedList) Remove(index int) error {
+	if index < 0 {
+		return fmt.Errorf("Index can't be negative")
+	}
+
+	if l.Size() == 0 {
+		return fmt.Errorf("Empty list")
+	}
+
+	if index >= l.Size() {
+		return fmt.Errorf("Index out of bounds")
+	}
+	return nil
+}
+
 // Contain checks if a linked list contains given element.
 func (l *LinkedList) Contain(el int) bool {
 	current := l
