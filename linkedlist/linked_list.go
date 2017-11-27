@@ -11,6 +11,15 @@ type LinkedList struct {
 	size int
 }
 
+// New creates empty linked list
+func New(elements ...int) LinkedList {
+	l := LinkedList{}
+	for _, el := range elements {
+		l.Add(el)
+	}
+	return l
+}
+
 // Size returns linked list's size
 func (l *LinkedList) Size() int {
 	return l.size
@@ -72,6 +81,27 @@ func (l *LinkedList) Remove(index int) error {
 	if index >= l.Size() {
 		return fmt.Errorf("Index out of bounds")
 	}
+
+	node := l
+	var count int
+
+	for count < index-1 {
+		node.size--
+		node = node.next
+		count++
+	}
+
+	if index == 0 {
+		if node.next == nil {
+			(*node) = LinkedList{}
+			return nil
+		}
+		node.root = node.next.root
+	}
+
+	node.size = node.next.size
+	node.next = node.next.next
+
 	return nil
 }
 
@@ -88,4 +118,21 @@ func (l *LinkedList) Contain(el int) bool {
 		}
 		current = current.next
 	}
+}
+
+func (l LinkedList) String() string {
+	end := "nil"
+	if l.Size() == 0 {
+		return end
+	}
+
+	var list string
+	current := &l
+
+	for current != nil {
+		list = fmt.Sprintf("%s%d -> ", list, current.root)
+		current = current.next
+	}
+
+	return list + end
 }
